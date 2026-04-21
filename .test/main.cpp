@@ -9,7 +9,7 @@ void print_winner(Hand& h1, Hand& h2);
 
 int main(void) {
     std::ifstream in;
-    in.open("test.txt");
+    in.open("p3/test.txt");
 
     // Create the deck and two hands   
     Deck d(1);
