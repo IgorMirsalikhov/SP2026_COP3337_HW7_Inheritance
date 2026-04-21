@@ -9,7 +9,7 @@ void print_winner(Hand& h1, Hand& h2);
 
 int main(void) {
     std::ifstream in;
-    in.open("p3/test.txt");
+    in.open("test.txt");
 
     // Create the deck and two hands   
     Deck d(1);
@@ -23,10 +23,10 @@ int main(void) {
     int cards_scanned = 0;
     while (in >> suit >> face) {
         if (cards_scanned < 5) {
-            cards1.push_back(Card(suit, face));
+            cards1.push_back(Card(face, suit));
         }
         else if (cards_scanned < 10) {
-            cards2.push_back(Card(suit, face));
+            cards2.push_back(Card(face, suit));
         }
         cards_scanned++;
         if (cards_scanned % 10 == 0) {
