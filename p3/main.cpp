@@ -3,78 +3,46 @@
 #include "Hand.hpp"
 
 #include <iostream>
+#include <fstream>
+
+void print_winner(Hand& h1, Hand& h2);
 
 int main(void) {
-    ////////////// Test Deck ////////////////
-    int seed;
-    std::cout << "Enter seed: ";
-    std::cin >> seed; 
-        
-    Deck myDeck(seed);
-    myDeck.shuffle();
-    Hand h(myDeck);
-    
-    bool pair = false;
-    bool two_pair = false;
-    bool three_of_kind = false;
-    bool four_of_kind = false;
-    bool flush = false;
-    bool straight = false;
-    bool full_house = false;
+    std::ifstream in;
+    in.open("p3/test.txt");
 
-    while (1) {
-        if (!myDeck.moreCards() || !h.fullHand()) {
-            myDeck.shuffle();
-            h.getNewHand(myDeck);
+    // Create the deck and two hands   
+    Deck d(1);
+    Hand h1(d);
+    Hand h2(d);
+
+    // Scan the test file and test different hands
+    std::vector<Card> cards1;
+    std::vector<Card> cards2;
+    int suit, face;
+    int cards_scanned = 0;
+    while (in >> suit >> face) {
+        if (cards_scanned < 5) {
+            cards1.push_back(Card(suit, face));
         }
-        if (!three_of_kind && h.threeOfAKind()) {
-            three_of_kind = true;
-            std::cout << "It took " << Hand::getHandsDealt() << " hands to get three of a kind" << std::endl;
-            h.printHand();
-            std::cout << std::endl;
-        } 
-        if (!pair && h.pair()) {
-            pair = true;
-            std::cout << "It took " << Hand::getHandsDealt() << " hands to get a pair" << std::endl;
-            h.printHand();
-            std::cout << std::endl;
-        } 
-        if (!two_pair && h.twoPair()) {
-            two_pair = true;
-            std::cout << "It took " << Hand::getHandsDealt() << " hands to get two pairs" << std::endl;
-            h.printHand();
-            std::cout << std::endl;
-        } 
-        if (!four_of_kind && h.fourOfAKind()) {
-            four_of_kind = true;
-            std::cout << "It took " << Hand::getHandsDealt() << " hands to get four of a kind" << std::endl;
-            h.printHand();
-            std::cout << std::endl;
-        } 
-        if (!flush && h.flush()) {
-            flush = true;
-            std::cout << "It took " << Hand::getHandsDealt() << " hands to get a flush" << std::endl;
-            h.printHand();
-            std::cout << std::endl;
-        } 
-        if (!straight && h.straight()) {
-            straight = true;
-            std::cout << "It took " << Hand::getHandsDealt() << " hands to get a straight" << std::endl;
-            h.printHand();
-            std::cout << std::endl;
-        } 
-        if (!full_house && h.fullHouse()) {
-            full_house = true;
-            std::cout << "It took " << Hand::getHandsDealt() << " hands to get a full house" << std::endl;
-            h.printHand();
-            std::cout << std::endl;
-        } 
-        if (    pair && two_pair && three_of_kind && four_of_kind &&
-                flush && straight && full_house) {
-            break;
+        else if (cards_scanned < 10) {
+            cards2.push_back(Card(suit, face));
         }
-        h.getNewHand(myDeck);
+        cards_scanned++;
+        if (cards_scanned % 10 == 0) {
+            cards_scanned = 0;
+            h1.setHand(cards1);
+            h2.setHand(cards2);
+            h1.printHand();
+            h2.printHand();
+            print_winner(h1, h2);
+            std::cout << "-------------------------\n";
+            cards1.clear();
+            cards2.clear();
+        }
     }
     
+    in.close();
+
     return 0;
 }
